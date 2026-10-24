@@ -1,0 +1,6 @@
+__pycache__/
+*.pyc
+Video_frames_CLIP/
+whisper_transcript/
+outputs_evidence_thread_v2/
+HateMM_*_K=*/
