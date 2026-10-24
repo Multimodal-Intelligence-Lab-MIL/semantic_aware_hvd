@@ -502,9 +502,12 @@ def build_units_from_frames(
         start_order = chunk[0].frame_order
         end_order = chunk[-1].frame_order
 
-        # 对 1fps 抽帧，frame_order=1 -> 第1秒附近
-        start_time_sec = float(start_order)
-        end_time_sec = float(end_order)
+        # 帧文件从 frame_000000 开始编号，与 Whisper 转写一样从 0 秒起算。
+        # unit 覆盖半开区间 [首帧时间, 末帧时间 + 1/fps)，相邻 unit 首尾相接、没有空隙。
+        start_index = chunk[0].frame_number if chunk[0].frame_number is not None else start_order - 1
+        end_index = chunk[-1].frame_number if chunk[-1].frame_number is not None else end_order - 1
+        start_time_sec = float(start_index) / fps
+        end_time_sec = float(end_index + 1) / fps
 
         units.append(
             UnitInfo(
